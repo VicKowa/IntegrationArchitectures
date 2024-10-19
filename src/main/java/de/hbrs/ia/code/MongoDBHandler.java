@@ -7,8 +7,8 @@ public class MongoDBHandler {
 
     static MongoDBHandler instance = null;
 
-    private MongoClient client;
-    private MongoDatabase database;
+    private MongoClient client = null;
+    private MongoDatabase database = null;
 
     private MongoDBHandler() {
     }
@@ -24,7 +24,7 @@ public class MongoDBHandler {
         if(client != null || database != null)
             return;
 
-        client = new MongoClient("localhost", 27017);
+        client = new MongoClient(host, port);
         database = client.getDatabase(databaseName);
     }
 
