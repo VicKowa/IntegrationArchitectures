@@ -1,6 +1,6 @@
 package de.hbrs.ia.model;
 
-public class SocialPerformanceRecords {
+public class SocialPerformanceRecord {
     private SpecifiedRecord leadershipCompetence;
     private SpecifiedRecord opennessToEmployee;
     private SpecifiedRecord socialbehaviorToEmployee;
