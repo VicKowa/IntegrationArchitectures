@@ -1,6 +1,6 @@
 package de.hbrs.ia.code;
-import de.hbrs.ia.solutions.model.SalesMan;
-import de.hbrs.ia.solutions.model.SocialPerformanceRecord;
+import de.hbrs.ia.model.SalesMan;
+import de.hbrs.ia.model.SocialPerformanceRecord;
 
 import java.util.List;
 
