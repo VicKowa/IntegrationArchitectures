@@ -1,6 +1,8 @@
 package de.hbrs.ia.model;
 
 import java.util.Objects;
+import org.bson.Document;
+
 
 /**
  * Represents a record of a specified bonus sheet such as
@@ -22,24 +24,18 @@ public class SpecifiedRecord {
         return targetValue;
     }
 
-    public void setTargetValue(int targetValue) {
-        this.targetValue = targetValue;
-    }
-
     public int getActualValue() {
         return actualValue;
-    }
-
-    public void setActualValue(int actualValue) {
-        this.actualValue = actualValue;
     }
 
     public int getBonus() {
         return bonus;
     }
 
-    public void setBonus(int bonus) {
-        this.bonus = bonus;
+    public Document toDocument() {
+        return new Document("targetValue", targetValue)
+                .append("actualValue", actualValue)
+                .append("bonus", bonus);
     }
 
     @Override
