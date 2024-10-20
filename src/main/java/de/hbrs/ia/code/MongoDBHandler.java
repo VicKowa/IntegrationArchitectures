@@ -13,7 +13,7 @@ public class MongoDBHandler {
     private MongoDBHandler() {
     }
 
-    private MongoDBHandler get() {
+    public static MongoDBHandler get() {
         if (instance == null) {
             instance = new MongoDBHandler();
         }
