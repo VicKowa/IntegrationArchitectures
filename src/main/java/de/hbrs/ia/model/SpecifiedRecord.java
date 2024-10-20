@@ -1,6 +1,5 @@
 package de.hbrs.ia.model;
 
-import java.util.Objects;
 import org.bson.Document;
 
 
@@ -36,6 +35,19 @@ public class SpecifiedRecord {
         return new Document("targetValue", targetValue)
                 .append("actualValue", actualValue)
                 .append("bonus", bonus);
+    }
+
+    /**
+     * transform one SocrialPerformanceRecord as BsonDocument to a SocialPerformanceRecord object
+     *
+     * @param document One SocialPerformanceRecord as BsonDocument
+     * @return
+     */
+    public static SpecifiedRecord documentToSpecifiedRecord(Document document) {
+        int targetValue = document.getInteger("targetValue");
+        int actualValue = document.getInteger("actualValue");
+        int bonus = document.getInteger("bonus");
+        return new SpecifiedRecord(targetValue, actualValue, bonus);
     }
 
     @Override

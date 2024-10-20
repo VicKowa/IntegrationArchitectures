@@ -87,6 +87,27 @@ public class SocialPerformanceRecord {
 
     }
 
+    /**
+     * transform one SocrialPerformanceRecord as BsonDocument to a SocialPerformanceRecord object
+     *
+     * @param document One SocialPerformanceRecord as BsonDocument
+     * @return
+     */
+    public static SocialPerformanceRecord documentToSocialPerformanceRecord(Document document) {
+        String department = document.getString("department");
+        double totalBonus = document.getDouble("totalBonus");
+        Date year = document.getDate("year");
+        SpecifiedRecord leadershipCompetence = SpecifiedRecord.documentToSpecifiedRecord(document.get("leadershipCompetence", Document.class));
+        SpecifiedRecord opennessToEmployee = SpecifiedRecord.documentToSpecifiedRecord(document.get("opennessToEmployee", Document.class));
+        SpecifiedRecord socialbehaviorToEmployee = SpecifiedRecord.documentToSpecifiedRecord(document.get("socialbehaviorToEmployee", Document.class));
+        SpecifiedRecord communicationSkills = SpecifiedRecord.documentToSpecifiedRecord(document.get("communicationSkills", Document.class));
+        SpecifiedRecord attitudeToClients = SpecifiedRecord.documentToSpecifiedRecord(document.get("attitudeToClients", Document.class));
+        SpecifiedRecord integrityToCompany = SpecifiedRecord.documentToSpecifiedRecord(document.get("integrityToCompany", Document.class));
+
+        return new SocialPerformanceRecord(department, totalBonus, year, leadershipCompetence, opennessToEmployee, socialbehaviorToEmployee, attitudeToClients, communicationSkills, integrityToCompany);
+
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
