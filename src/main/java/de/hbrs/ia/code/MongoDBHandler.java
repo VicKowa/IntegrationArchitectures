@@ -21,15 +21,15 @@ public class MongoDBHandler {
     }
 
     public void setupConnection(String host, int port, String databaseName) {
-        if(client != null || database != null)
+        if (client != null || database != null)
             return;
 
         client = new MongoClient(host, port);
         database = client.getDatabase(databaseName);
     }
 
-    public void terminateConnection(){
-        if(client != null)
+    public void terminateConnection() {
+        if (client != null)
             return;
 
         database = null;

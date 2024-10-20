@@ -19,4 +19,8 @@ public interface ManagePersonal {
     List<SalesMan> readAllSalesMen();
 
     List<SocialPerformanceRecord> readSocialPerformanceRecord(SalesMan salesMan);
+
+    void removeSalesMan(SalesMan record);
+
+    void removeSocialPerformanceRecord(SocialPerformanceRecord record, SalesMan salesMan);
 }

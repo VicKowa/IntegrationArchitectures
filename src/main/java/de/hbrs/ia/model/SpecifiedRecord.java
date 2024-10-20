@@ -1,6 +1,8 @@
 package de.hbrs.ia.model;
 
+import java.util.Objects;
 import org.bson.Document;
+
 
 /**
  * Represents a record of a specified bonus sheet such as
@@ -34,5 +36,13 @@ public class SpecifiedRecord {
         return new Document("targetValue", targetValue)
                 .append("actualValue", actualValue)
                 .append("bonus", bonus);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SpecifiedRecord that = (SpecifiedRecord) o;
+        return targetValue == that.targetValue && actualValue == that.actualValue && bonus == that.bonus;
     }
 }

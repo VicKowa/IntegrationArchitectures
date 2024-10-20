@@ -1,5 +1,7 @@
 package de.hbrs.ia.model;
 
+
+import java.util.Objects;
 import org.bson.Document;
 
 import java.util.Date;
@@ -83,5 +85,13 @@ public class SocialPerformanceRecord {
                 .append("attitudeToClients", attitudeToClients.toDocument())
                 .append("communicationSkills", communicationSkills.toDocument())
                 .append("integrityToCompany", integrityToCompany.toDocument());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SocialPerformanceRecord that = (SocialPerformanceRecord) o;
+        return Objects.equals(leadershipCompetence, that.leadershipCompetence) && Objects.equals(opennessToEmployee, that.opennessToEmployee) && Objects.equals(socialbehaviorToEmployee, that.socialbehaviorToEmployee) && Objects.equals(attitudeToClients, that.attitudeToClients) && Objects.equals(communicationSkills, that.communicationSkills) && Objects.equals(integrityToCompany, that.integrityToCompany);
     }
 }
