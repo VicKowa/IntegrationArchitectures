@@ -1,9 +1,21 @@
 package de.hbrs.ia.code;
 
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import de.hbrs.ia.model.SalesMan;
 import de.hbrs.ia.model.SocialPerformanceRecord;
+import de.hbrs.ia.model.SpecifiedRecord;
+import org.bson.BsonArray;
+import org.bson.BsonDocument;
+import org.bson.BsonValue;
+import org.bson.Document;
 
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+
+import static com.mongodb.client.model.Filters.eq;
 
 public class SalesmanMongoImpl implements ManagePersonal {
 
@@ -19,16 +31,89 @@ public class SalesmanMongoImpl implements ManagePersonal {
 
     @Override
     public SalesMan readSalesMan(int sid) {
-        return null;
+        MongoDatabase database = MongoDBHandler.get().getDatabase();
+        MongoCollection<Document> collection = database.getCollection("salesmen");
+
+        Document salesman = collection.find(eq("sid", sid)).first();
+        return documentToSalesMan(salesman);
+    }
+
+    /**
+     * helper method to convert a document to a SalesMan object
+     *
+     * @param document
+     * @return
+     */
+    private SalesMan documentToSalesMan(Document document) {
+        String firstname = document.getString("firstname");
+        String lastname = document.getString("lastname");
+        Integer sid = document.getInteger("sid");
+
+        return new SalesMan(firstname, lastname, sid);
     }
 
     @Override
     public List<SalesMan> readAllSalesMen() {
-        return List.of();
+        MongoDatabase database = MongoDBHandler.get().getDatabase();
+        MongoCollection<Document> collection = database.getCollection("salesmen");
+
+        List<SalesMan> result = new LinkedList<>();
+        //get all salesmen
+        FindIterable<Document> salesmen = collection.find();
+        // for each salesman convert the document to a SalesMan object
+        salesmen.forEach(document -> {
+            result.add(documentToSalesMan(document));
+        });
+        return result;
     }
 
     @Override
     public List<SocialPerformanceRecord> readSocialPerformanceRecord(SalesMan salesMan) {
-        return List.of();
+        MongoDatabase database = MongoDBHandler.get().getDatabase();
+        MongoCollection<Document> collection = database.getCollection("salesmen");
+
+        List<SocialPerformanceRecord> result = new LinkedList<>();
+        Document salesman = collection.find(eq("sid", salesMan.getId())).first();
+        BsonArray records = salesman.get("socialPerformanceRecords", BsonArray.class);
+        records.forEach(record -> {
+            List<SocialPerformanceRecord> socialPerformanceRecords = new LinkedList<>();
+            socialPerformanceRecords.add(documentToSocialPerformanceRecord(record.asDocument()));
+        });
+        return result;
+    }
+
+    /**
+     * transform one SocrialPerformanceRecord as BsonDocument to a SocialPerformanceRecord object
+     *
+     * @param document One SocialPerformanceRecord as BsonDocument
+     * @return
+     */
+    private SocialPerformanceRecord documentToSocialPerformanceRecord(BsonDocument document) {
+        String department = document.getString("department").getValue();
+        float totalBonus = (float) document.get("totalBonus").asDouble().getValue();
+        String year = document.getString("year").getValue();
+        Date date = new Date(year);
+        SpecifiedRecord leadershipCompetence = documentToSpecifiedRecord(document.getDocument("leadershipCompetence"));
+        SpecifiedRecord opennessToEmployee = documentToSpecifiedRecord(document.getDocument("opennessToEmployee"));
+        SpecifiedRecord socialbehaviorToEmployee = documentToSpecifiedRecord(document.getDocument("socialbehaviorToEmployee"));
+        SpecifiedRecord communicationSkills = documentToSpecifiedRecord(document.getDocument("communicationSkills"));
+        SpecifiedRecord attitudeToClients = documentToSpecifiedRecord(document.getDocument("attitudeToClients"));
+        SpecifiedRecord integrityToCompany = documentToSpecifiedRecord(document.getDocument("integrityToCompany"));
+
+        return new SocialPerformanceRecord(department, totalBonus, date, leadershipCompetence, opennessToEmployee, socialbehaviorToEmployee, attitudeToClients, communicationSkills, integrityToCompany);
+
+    }
+
+    /**
+     * transform one SocrialPerformanceRecord as BsonDocument to a SocialPerformanceRecord object
+     *
+     * @param document One SocialPerformanceRecord as BsonDocument
+     * @return
+     */
+    private SpecifiedRecord documentToSpecifiedRecord(BsonDocument document) {
+        int targetValue = document.get("targetValue").asInt32().getValue();
+        int actualValue = document.get("actualValue").asInt32().getValue();
+        int bonus = document.get("bonus").asInt32().getValue();
+        return new SpecifiedRecord(targetValue, actualValue, bonus);
     }
 }
