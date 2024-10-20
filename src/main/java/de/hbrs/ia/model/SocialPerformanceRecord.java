@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class SocialPerformanceRecord {
     private String department;
-    private float totalBonus;
+    private double totalBonus;
     private Date year;
     private SpecifiedRecord leadershipCompetence;
     private SpecifiedRecord opennessToEmployee;
@@ -17,7 +17,7 @@ public class SocialPerformanceRecord {
     private SpecifiedRecord integrityToCompany;
 
     public SocialPerformanceRecord(String department,
-                                   float totalBonus,
+                                   double totalBonus,
                                    Date year,
                                    SpecifiedRecord leadershipCompetence,
                                    SpecifiedRecord opennessToEmployee,
@@ -66,7 +66,7 @@ public class SocialPerformanceRecord {
         return department;
     }
 
-    public float getTotalBonus() {
+    public double getTotalBonus() {
         return totalBonus;
     }
 

@@ -6,12 +6,13 @@ import de.hbrs.ia.model.SalesMan;
 import de.hbrs.ia.model.SocialPerformanceRecord;
 import de.hbrs.ia.model.SpecifiedRecord;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.Calendar;
 import java.util.Date;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class SalesmanMongoImplTest {
 
@@ -65,12 +66,37 @@ public class SalesmanMongoImplTest {
         MongoDBHandler.get().terminateConnection();
     }
 
+    @AfterEach
+    void cleanUp() {
+        MongoDBHandler.get().getDatabase().drop();
+    }
+
     @Test
     void testCreateSalesMan() {
     }
 
     @Test
     void testAddSocialPerformanceRecord() {
+        salesmanMongo.createSalesMan(salesMan);
+        salesmanMongo.createSalesMan(salesMan2);
+        salesmanMongo.createSalesMan(salesMan3);
+        assertEquals(3, salesmanMongo.readAllSalesMen().size());
+        assertEquals(0, salesmanMongo.readSocialPerformanceRecord(salesMan3).size());
+
+        salesmanMongo.addSocialPerformanceRecord(socialPerformanceRecord, salesMan);
+        assertEquals(1, salesmanMongo.readSocialPerformanceRecord(salesMan).size());
+
+        salesmanMongo.addSocialPerformanceRecord(socialPerformanceRecord2, salesMan);
+        assertEquals(2, salesmanMongo.readSocialPerformanceRecord(salesMan).size());
+
+        salesmanMongo.addSocialPerformanceRecord(socialPerformanceRecord, salesMan2);
+        assertEquals(1, salesmanMongo.readSocialPerformanceRecord(salesMan2).size());
+
+        // check if the socialPerformanceRecord object is stored correctly
+        assertEquals(socialPerformanceRecord, salesmanMongo.readSocialPerformanceRecord(salesMan).get(0));
+        assertEquals(socialPerformanceRecord2, salesmanMongo.readSocialPerformanceRecord(salesMan).get(1));
+        assertEquals(socialPerformanceRecord, salesmanMongo.readSocialPerformanceRecord(salesMan2).get(0));
+
     }
 
     @Test
@@ -90,7 +116,20 @@ public class SalesmanMongoImplTest {
 
     @Test
     void testRemoveSalesMan() {
+        assertEquals(0, salesmanMongo.readAllSalesMen().size());
 
+        salesmanMongo.createSalesMan(salesMan);
+        assertEquals(1, salesmanMongo.readAllSalesMen().size());
+        salesmanMongo.createSalesMan(salesMan2);
+        assertEquals(2, salesmanMongo.readAllSalesMen().size());
+
+        salesmanMongo.removeSalesMan(salesMan);
+        assertEquals(1, salesmanMongo.readAllSalesMen().size());
+        assertNull(salesmanMongo.readSalesMan(salesMan.getId()));
+
+        salesmanMongo.removeSalesMan(salesMan2);
+        assertEquals(0, salesmanMongo.readAllSalesMen().size());
+        assertNull(salesmanMongo.readSalesMan(salesMan2.getId()));
     }
 
     @Test
