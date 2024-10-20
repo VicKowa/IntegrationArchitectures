@@ -1,22 +1,26 @@
 package test;
 
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import de.hbrs.ia.code.MongoDBHandler;
 import de.hbrs.ia.code.SalesmanMongoImpl;
 import de.hbrs.ia.model.SalesMan;
 import de.hbrs.ia.model.SocialPerformanceRecord;
 import de.hbrs.ia.model.SpecifiedRecord;
 
+
+import org.bson.Document;
 import org.junit.jupiter.api.*;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+
+
 
 public class SalesmanMongoImplTest {
 
@@ -77,6 +81,17 @@ public class SalesmanMongoImplTest {
 
     @Test
     void testCreateSalesMan() {
+
+        List<SalesMan> salesManListExpected = new ArrayList<>();
+
+        Arrays.asList(salesMan, salesMan2, salesMan3, salesMan4, salesMan5).forEach(s -> {
+            salesmanMongo.createSalesMan(s);
+            salesManListExpected.add(s);
+
+            List<SalesMan> salesManList = salesmanMongo.readAllSalesMen();
+
+            assertEquals(salesManListExpected, salesManList);
+        });
     }
 
     @Test
@@ -105,13 +120,18 @@ public class SalesmanMongoImplTest {
 
     @Test
     void testReadSalesMan() {
+        List<SalesMan> salesManListExpected = Arrays.asList(salesMan, salesMan2, salesMan3, salesMan4, salesMan5);
+        salesManListExpected.forEach(salesmanMongo::createSalesMan);
 
+        salesManListExpected.forEach(s -> {
+            SalesMan salesMan = salesmanMongo.readSalesMan(s.getId());
+            assertEquals(s, salesMan);
+        });
     }
 
     @Test
     void testReadAllSalesMen() {
         assertTrue(salesmanMongo.readAllSalesMen().isEmpty());
-
         List<SalesMan> salesMen = Arrays.asList(salesMan, salesMan2, salesMan3, salesMan4, salesMan5);
 
         for (int i = 0; i < salesMen.size(); i++) {
