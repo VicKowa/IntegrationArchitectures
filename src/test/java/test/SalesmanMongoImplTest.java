@@ -10,8 +10,12 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.util.Calendar;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SalesmanMongoImplTest {
 
@@ -80,7 +84,17 @@ public class SalesmanMongoImplTest {
 
     @Test
     void testReadAllSalesMen() {
+        assertTrue(salesmanMongo.readAllSalesMen().isEmpty());
 
+        List<SalesMan> salesMen = Arrays.asList(salesMan, salesMan2, salesMan3, salesMan4, salesMan5);
+
+        for (int i = 0; i < salesMen.size(); i++) {
+            salesmanMongo.createSalesMan(salesMan);
+
+            // check if the SalesMan is added
+            assertEquals(i, salesmanMongo.readAllSalesMen().size());
+            assertEquals(salesMen.get(i), salesmanMongo.readAllSalesMen().get(i));
+        }
     }
 
     @Test
@@ -95,6 +109,24 @@ public class SalesmanMongoImplTest {
 
     @Test
     void testRemoveSocialPerformanceRecord() {
+        // create a SalesMan and add two SocialPerformanceRecord
+        salesmanMongo.createSalesMan(salesMan);
+        salesmanMongo.addSocialPerformanceRecord(socialPerformanceRecord, salesMan);
+        salesmanMongo.addSocialPerformanceRecord(socialPerformanceRecord2, salesMan);
 
+        // check if the SocialPerformanceRecord are added
+        assertEquals(2, salesmanMongo.readSocialPerformanceRecord(salesMan).size());
+        assertEquals(socialPerformanceRecord, salesmanMongo.readSocialPerformanceRecord(salesMan).get(0));
+        assertEquals(socialPerformanceRecord2, salesmanMongo.readSocialPerformanceRecord(salesMan).get(1));
+
+        salesmanMongo.removeSocialPerformanceRecord(socialPerformanceRecord, salesMan);
+
+        // check if the SocialPerformanceRecord is removed
+        assertEquals(1, salesmanMongo.readSocialPerformanceRecord(salesMan).size());
+        assertEquals(socialPerformanceRecord2, salesmanMongo.readSocialPerformanceRecord(salesMan).get(0));
+
+        salesmanMongo.removeSocialPerformanceRecord(socialPerformanceRecord2, salesMan);
+
+        assertTrue(salesmanMongo.readSocialPerformanceRecord(salesMan).isEmpty());
     }
 }
