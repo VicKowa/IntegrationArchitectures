@@ -1,5 +1,7 @@
 package de.hbrs.ia.model;
 
+import org.bson.Document;
+
 /**
  * Represents a record of a specified bonus sheet such as
  * Leadership Competence, Openness to Employees, etc.
@@ -38,5 +40,11 @@ public class SpecifiedRecord {
 
     public void setBonus(int bonus) {
         this.bonus = bonus;
+    }
+
+    public Document toDocument() {
+        return new Document("targetValue", targetValue)
+                .append("actualValue", actualValue)
+                .append("bonus", bonus);
     }
 }

@@ -1,5 +1,7 @@
 package de.hbrs.ia.model;
 
+import org.bson.Document;
+
 public class SocialPerformanceRecord {
     private SpecifiedRecord leadershipCompetence;
     private SpecifiedRecord opennessToEmployee;
@@ -55,5 +57,14 @@ public class SocialPerformanceRecord {
 
     public void setIntegrityToCompany(SpecifiedRecord integrityToCompany) {
         this.integrityToCompany = integrityToCompany;
+    }
+
+    public Document toDocument() {
+        return new Document("leadershipCompetence", leadershipCompetence.toDocument())
+                .append("opennessToEmployee", opennessToEmployee.toDocument())
+                .append("socialbehaviorToEmployee", socialbehaviorToEmployee.toDocument())
+                .append("attitudeToClients", attitudeToClients.toDocument())
+                .append("communicationSkills", communicationSkills.toDocument())
+                .append("integrityToCompany", integrityToCompany.toDocument());
     }
 }
