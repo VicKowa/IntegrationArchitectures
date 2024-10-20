@@ -1,6 +1,5 @@
 package de.hbrs.ia.model;
 
-
 import java.util.Objects;
 import org.bson.Document;
 
@@ -85,6 +84,7 @@ public class SocialPerformanceRecord {
                 .append("attitudeToClients", attitudeToClients.toDocument())
                 .append("communicationSkills", communicationSkills.toDocument())
                 .append("integrityToCompany", integrityToCompany.toDocument());
+
     }
 
     @Override
