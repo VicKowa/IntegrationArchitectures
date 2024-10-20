@@ -1,5 +1,7 @@
 package de.hbrs.ia.model;
 
+import java.util.Objects;
+
 /**
  * Represents a record of a specified bonus sheet such as
  * Leadership Competence, Openness to Employees, etc.
@@ -38,5 +40,13 @@ public class SpecifiedRecord {
 
     public void setBonus(int bonus) {
         this.bonus = bonus;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SpecifiedRecord that = (SpecifiedRecord) o;
+        return targetValue == that.targetValue && actualValue == that.actualValue && bonus == that.bonus;
     }
 }

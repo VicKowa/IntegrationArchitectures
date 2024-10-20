@@ -1,5 +1,7 @@
 package de.hbrs.ia.model;
 
+import java.util.Objects;
+
 public class SocialPerformanceRecord {
     private SpecifiedRecord leadershipCompetence;
     private SpecifiedRecord opennessToEmployee;
@@ -55,5 +57,13 @@ public class SocialPerformanceRecord {
 
     public void setIntegrityToCompany(SpecifiedRecord integrityToCompany) {
         this.integrityToCompany = integrityToCompany;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SocialPerformanceRecord that = (SocialPerformanceRecord) o;
+        return Objects.equals(leadershipCompetence, that.leadershipCompetence) && Objects.equals(opennessToEmployee, that.opennessToEmployee) && Objects.equals(socialbehaviorToEmployee, that.socialbehaviorToEmployee) && Objects.equals(attitudeToClients, that.attitudeToClients) && Objects.equals(communicationSkills, that.communicationSkills) && Objects.equals(integrityToCompany, that.integrityToCompany);
     }
 }
