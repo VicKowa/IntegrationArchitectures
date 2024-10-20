@@ -92,7 +92,7 @@ public class SalesmanMongoImplTest {
             salesmanMongo.createSalesMan(salesMan);
 
             // check if the SalesMan is added
-            assertEquals(i, salesmanMongo.readAllSalesMen().size());
+            assertEquals(i + 1, salesmanMongo.readAllSalesMen().size());
             assertEquals(salesMen.get(i), salesmanMongo.readAllSalesMen().get(i));
         }
     }
