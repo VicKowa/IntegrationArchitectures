@@ -1,29 +1,25 @@
 package de.hbrs.ia.code;
 
 import com.mongodb.client.FindIterable;
-import de.hbrs.ia.model.SpecifiedRecord;
-import org.bson.BsonArray;
-import org.bson.BsonDocument;
-import org.bson.BsonValue;
-import com.mongodb.MongoClient;
 import com.mongodb.client.model.Updates;
-import de.hbrs.ia.model.SalesMan;
-import de.hbrs.ia.model.SocialPerformanceRecord;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+
+import de.hbrs.ia.model.SalesMan;
+import de.hbrs.ia.model.SocialPerformanceRecord;
+
 import org.bson.Document;
 
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 
-import static com.mongodb.client.model.Filters.eq;
-
-import static com.mongodb.client.model.Filters.eq;
-
 public class SalesmanMongoImpl implements ManagePersonal {
 
+    /**
+     * Creates a new SalesMan record in the database.
+     *
+     * @param record SalesMan object to be created
+     */
     @Override
     public void createSalesMan(SalesMan record) {
         MongoDatabase database = MongoDBHandler.get().getDatabase();
@@ -40,6 +36,12 @@ public class SalesmanMongoImpl implements ManagePersonal {
         salesmenCollection.insertOne(query);
     }
 
+    /**
+     * Adds a new SocialPerformanceRecord to a SalesMan record in the database.
+     *
+     * @param record SocialPerformanceRecord object to be added
+     * @param salesMan SalesMan object to which the record is added
+     */
     @Override
     public void addSocialPerformanceRecord(SocialPerformanceRecord record, SalesMan salesMan) {
         MongoDatabase database = MongoDBHandler.get().getDatabase();
@@ -55,20 +57,33 @@ public class SalesmanMongoImpl implements ManagePersonal {
         );
     }
 
+    /**
+     * Reads a SalesMan record from the database.
+     *
+     * @param sid ID of the SalesMan record to be read
+     * @return SalesMan object read from the database
+     */
     @Override
     public SalesMan readSalesMan(int sid) {
         MongoDatabase database = MongoDBHandler.get().getDatabase();
         MongoCollection<Document> collection = database.getCollection("salesmen");
 
-        Document salesman = collection.find(eq("sid", sid)).first();
+        Document filter = new Document("sid", sid);
+
+        // find salesman by sid
+        Document salesman = collection.find(filter).first();
+
+        if (salesman == null)
+            return null;
+
         return documentToSalesMan(salesman);
     }
 
     /**
-     * helper method to convert a document to a SalesMan object
+     * Converts a Document object to a SalesMan object.
      *
-     * @param document
-     * @return
+     * @param document Document object to be converted
+     * @return SalesMan object converted from the Document object
      */
     private SalesMan documentToSalesMan(Document document) {
         String firstname = document.getString("firstname");
@@ -78,98 +93,101 @@ public class SalesmanMongoImpl implements ManagePersonal {
         return new SalesMan(firstname, lastname, sid);
     }
 
+    /**
+     * Reads all SalesMan records from the database.
+     *
+     * @return List of SalesMan objects read from the database
+     */
     @Override
     public List<SalesMan> readAllSalesMen() {
         MongoDatabase database = MongoDBHandler.get().getDatabase();
         MongoCollection<Document> collection = database.getCollection("salesmen");
 
-        List<SalesMan> result = new LinkedList<>();
-        //get all salesmen
+        List<SalesMan> result = new ArrayList<>();
+
+        // get all salesmen
         FindIterable<Document> salesmen = collection.find();
+
         // for each salesman convert the document to a SalesMan object
         salesmen.forEach(document -> {
             result.add(documentToSalesMan(document));
         });
+
         return result;
     }
 
+    /**
+     * Reads all SocialPerformanceRecord records from a SalesMan record in the database.
+     *
+     * @param salesMan SalesMan object from which the records are read
+     * @return List of SocialPerformanceRecord objects read from the database
+     */
     @Override
     public List<SocialPerformanceRecord> readSocialPerformanceRecord(SalesMan salesMan) {
         MongoDatabase database = MongoDBHandler.get().getDatabase();
         MongoCollection<Document> collection = database.getCollection("salesmen");
 
-        List<SocialPerformanceRecord> result = new LinkedList<>();
-        Document salesman = collection.find(eq("sid", salesMan.getId())).first();
-        BsonArray records = salesman.get("socialPerformanceRecords", BsonArray.class);
-        records.forEach(record -> {
-            List<SocialPerformanceRecord> socialPerformanceRecords = new LinkedList<>();
-            socialPerformanceRecords.add(documentToSocialPerformanceRecord(record.asDocument()));
+        List<SocialPerformanceRecord> result = new ArrayList<>();
+
+        Document filter = new Document("sid", salesMan.getId());
+
+        // find salesman by sid
+        Document salesman = collection.find(filter).first();
+
+        if (salesman == null)
+            return null;
+
+        // get socialPerformanceRecords from salesman
+        Object records = salesman.get("socialPerformanceRecords");
+
+        if (!(records instanceof List<?>)) {
+            return null;
+        }
+
+        List<?> recordsList = (List<?>) records;
+
+        // for each record convert the document to a SocialPerformanceRecord object
+        recordsList.forEach(record -> {
+            if (record instanceof SocialPerformanceRecord) {
+                result.add((SocialPerformanceRecord) record);
+            }
         });
+
         return result;
     }
 
     /**
-     * transform one SocrialPerformanceRecord as BsonDocument to a SocialPerformanceRecord object
+     * Removes a SalesMan record from the database.
      *
-     * @param document One SocialPerformanceRecord as BsonDocument
-     * @return
+     * @param record SalesMan object to be removed
      */
-    private SocialPerformanceRecord documentToSocialPerformanceRecord(BsonDocument document) {
-        String department = document.getString("department").getValue();
-        float totalBonus = (float) document.get("totalBonus").asDouble().getValue();
-        String year = document.getString("year").getValue();
-        Date date = new Date(year);
-        SpecifiedRecord leadershipCompetence = documentToSpecifiedRecord(document.getDocument("leadershipCompetence"));
-        SpecifiedRecord opennessToEmployee = documentToSpecifiedRecord(document.getDocument("opennessToEmployee"));
-        SpecifiedRecord socialbehaviorToEmployee = documentToSpecifiedRecord(document.getDocument("socialbehaviorToEmployee"));
-        SpecifiedRecord communicationSkills = documentToSpecifiedRecord(document.getDocument("communicationSkills"));
-        SpecifiedRecord attitudeToClients = documentToSpecifiedRecord(document.getDocument("attitudeToClients"));
-        SpecifiedRecord integrityToCompany = documentToSpecifiedRecord(document.getDocument("integrityToCompany"));
-
-        return new SocialPerformanceRecord(department, totalBonus, date, leadershipCompetence, opennessToEmployee, socialbehaviorToEmployee, attitudeToClients, communicationSkills, integrityToCompany);
-
-    }
-
-    /**
-     * transform one SocrialPerformanceRecord as BsonDocument to a SocialPerformanceRecord object
-     *
-     * @param document One SocialPerformanceRecord as BsonDocument
-     * @return
-     */
-    private SpecifiedRecord documentToSpecifiedRecord(BsonDocument document) {
-        int targetValue = document.get("targetValue").asInt32().getValue();
-        int actualValue = document.get("actualValue").asInt32().getValue();
-        int bonus = document.get("bonus").asInt32().getValue();
-        return new SpecifiedRecord(targetValue, actualValue, bonus);
-    }
-
     @Override
     public void removeSalesMan(SalesMan record) {
         MongoDatabase database = MongoDBHandler.get().getDatabase();
         MongoCollection<Document> salesmenCollection = database.getCollection("salesmen");
-        salesmenCollection.deleteOne(eq("sid", record.getId()));
+
+        Document filter = new Document("sid", record.getId());
+
+        salesmenCollection.deleteOne(filter);
     }
 
+    /**
+     * Removes a SocialPerformanceRecord record from a SalesMan record in the database.
+     *
+     * @param record SocialPerformanceRecord object to be removed
+     * @param salesMan SalesMan object from which the record is removed
+     */
     @Override
     public void removeSocialPerformanceRecord(SocialPerformanceRecord record, SalesMan salesMan) {
         MongoDatabase database = MongoDBHandler.get().getDatabase();
         MongoCollection<Document> salesmenCollection = database.getCollection("salesmen");
 
-        Document salesMenDoc = salesmenCollection.find(eq("sid", salesMan.getId())).first();
+        Document filter = new Document("sid", salesMan.getId());
 
-        if (salesMenDoc == null)
-            return;
-
-        List<SocialPerformanceRecord> socialPerformanceRecords = (List<SocialPerformanceRecord>) salesMenDoc.get("socialPerformanceRecords");
-
-        if (socialPerformanceRecords == null)
-            return;
-
-        socialPerformanceRecords.remove(record);
-
+        // remove record from socialPerformanceRecords field
         salesmenCollection.updateOne(
-                eq("sid", salesMan.getId()),
-                new Document("$set", new Document("socialPerformanceRecords", socialPerformanceRecords))
+                filter,
+                Updates.pull("socialPerformanceRecords", record.toDocument())
         );
     }
 }
