@@ -135,7 +135,7 @@ public class SalesmanMongoImplTest {
         List<SalesMan> salesMen = Arrays.asList(salesMan, salesMan2, salesMan3, salesMan4, salesMan5);
 
         for (int i = 0; i < salesMen.size(); i++) {
-            salesmanMongo.createSalesMan(salesMan);
+            salesmanMongo.createSalesMan(salesMen.get(i));
 
             // check if the SalesMan is added
             assertEquals(i + 1, salesmanMongo.readAllSalesMen().size());
@@ -145,7 +145,18 @@ public class SalesmanMongoImplTest {
 
     @Test
     void testReadSocialPerformanceRecord() {
+        // Create a SalesMan and add two SocialPerformanceRecord
+        salesmanMongo.createSalesMan(salesMan);
+        salesmanMongo.addSocialPerformanceRecord(socialPerformanceRecord, salesMan);
+        salesmanMongo.addSocialPerformanceRecord(socialPerformanceRecord2, salesMan);
 
+        // Read the SocialPerformanceRecords from the SalesMan
+        List<SocialPerformanceRecord> records = salesmanMongo.readSocialPerformanceRecord(salesMan);
+
+        // Verify the records are read correctly
+        assertEquals(2, records.size());
+        assertEquals(socialPerformanceRecord, records.get(0));
+        assertEquals(socialPerformanceRecord2, records.get(1));
     }
 
     @Test
