@@ -37,7 +37,7 @@ public class SocialPerformanceRecord {
     }
 
 
-    // Getters and Setters
+    // Getter methods
     public SpecifiedRecord getLeadershipCompetence() {
         return leadershipCompetence;
     }
@@ -74,6 +74,11 @@ public class SocialPerformanceRecord {
         return year;
     }
 
+    /**
+     * Transform a SocialPerformanceRecord object to a BsonDocument
+     *
+     * @return BsonDocument
+     */
     public Document toDocument() {
         return new Document("department", department)
                 .append("totalBonus", totalBonus)
@@ -88,10 +93,10 @@ public class SocialPerformanceRecord {
     }
 
     /**
-     * transform one SocrialPerformanceRecord as BsonDocument to a SocialPerformanceRecord object
+     * transform one SocialPerformanceRecord as BsonDocument to a SocialPerformanceRecord object
      *
      * @param document One SocialPerformanceRecord as BsonDocument
-     * @return
+     * @return SocialPerformanceRecord object
      */
     public static SocialPerformanceRecord documentToSocialPerformanceRecord(Document document) {
         String department = document.getString("department");
@@ -108,6 +113,12 @@ public class SocialPerformanceRecord {
 
     }
 
+    /**
+     * Check if two SocialPerformanceRecord objects are equal
+     *
+     * @param o Another SocialPerformanceRecord object
+     * @return true if two SocialPerformanceRecord objects are equal, false otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

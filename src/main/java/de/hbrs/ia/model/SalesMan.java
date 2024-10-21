@@ -47,6 +47,12 @@ public class SalesMan {
         return document;
     }
 
+    /**
+     * Check if two SalesMan objects are equal
+     *
+     * @param o Another SalesMan object
+     * @return true if two SalesMan objects are equal, false otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

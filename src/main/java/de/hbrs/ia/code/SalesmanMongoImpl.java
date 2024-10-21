@@ -25,6 +25,15 @@ public class SalesmanMongoImpl implements ManagePersonal {
         MongoDatabase database = MongoDBHandler.get().getDatabase();
         MongoCollection<Document> salesmenCollection = database.getCollection("salesmen");
 
+        // check if SalesMan with sid already exists
+        Document filter = new Document("sid", record.getId());
+        Document salesman = salesmenCollection.find(filter).first();
+
+        if (salesman != null) {
+            System.out.println("Salesman with sid " + record.getId() + " already exists");
+            return;
+        }
+
         // create empty socialPerformanceRecords
         ArrayList<SocialPerformanceRecord> socialPerformanceRecords = new ArrayList<>();
 
