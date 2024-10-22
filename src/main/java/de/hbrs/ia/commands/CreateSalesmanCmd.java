@@ -16,7 +16,7 @@ public class CreateSalesmanCmd implements Cmd {
     public boolean execute(String[] args) {
         // check if input is correct
         if (args.length != 3) {
-            System.out.println("Usage: create_salesman <firstname> <lastname> <sid>");
+            System.out.println("> Usage: create_salesman <firstname> <lastname> <sid>");
             return false;
         }
 
@@ -27,7 +27,7 @@ public class CreateSalesmanCmd implements Cmd {
         try {
             sid = Integer.parseInt(args[2]);
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input: sid must be an integer");
+            System.out.println("> Invalid input: sid must be an integer");
             return false;
         }
 

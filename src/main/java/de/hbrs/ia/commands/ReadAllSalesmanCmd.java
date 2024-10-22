@@ -19,7 +19,7 @@ public class ReadAllSalesmanCmd implements CLIParser.Cmd {
     public boolean execute(String[] args) {
         // check if input is correct
         if (args.length != 0) {
-            System.out.println("Usage: read_salesman");
+            System.out.println("> Usage: read_salesman");
             return false;
         }
 

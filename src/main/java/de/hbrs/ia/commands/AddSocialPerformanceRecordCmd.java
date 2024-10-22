@@ -21,7 +21,7 @@ public class AddSocialPerformanceRecordCmd implements CLIParser.Cmd {
     public boolean execute(String[] args) {
         // check if input is correct
         if (args.length != 4) {
-            System.out.println("Usage: add_spr <sid> <department> <totalBonus> <year>");
+            System.out.println("> Usage: add_spr <sid> <department> <totalBonus> <year>");
             return false;
         }
 
@@ -38,10 +38,10 @@ public class AddSocialPerformanceRecordCmd implements CLIParser.Cmd {
             sid = Integer.parseInt(args[0]);
             totalBonus = Integer.parseInt(args[2]);
         } catch (ParseException e) {
-            System.out.println("Invalid year format. Please use 'yyyy'");
+            System.out.println("> Invalid year format. Please use 'yyyy'");
             return false;
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input: sid and totalBonus must be integers");
+            System.out.println("> Invalid input: sid and totalBonus must be integers");
             return false;
         }
 
@@ -66,7 +66,7 @@ public class AddSocialPerformanceRecordCmd implements CLIParser.Cmd {
             String[] values = sc.nextLine().split(" ");
 
             if (values.length != 3) {
-                System.out.println("Usage: <targetValue> <actualValue> <bonus>");
+                System.out.println("> Usage: <targetValue> <actualValue> <bonus>");
                 i--;
                 continue;
             }
@@ -80,7 +80,7 @@ public class AddSocialPerformanceRecordCmd implements CLIParser.Cmd {
                 actualValue = Integer.parseInt(values[1]);
                 bonus = Integer.parseInt(values[2]);
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input: targetValue, actualValue and bonus must be integers");
+                System.out.println("> Invalid input: targetValue, actualValue and bonus must be integers");
                 i--;
                 continue;
             }
