@@ -38,10 +38,10 @@ public class SpecifiedRecord {
     }
 
     /**
-     * transform one SocrialPerformanceRecord as BsonDocument to a SocialPerformanceRecord object
+     * Transform one SocialPerformanceRecord as BsonDocument to a SocialPerformanceRecord object
      *
      * @param document One SocialPerformanceRecord as BsonDocument
-     * @return
+     * @return SocialPerformanceRecord object
      */
     public static SpecifiedRecord documentToSpecifiedRecord(Document document) {
         int targetValue = document.getInteger("targetValue");
@@ -50,6 +50,12 @@ public class SpecifiedRecord {
         return new SpecifiedRecord(targetValue, actualValue, bonus);
     }
 
+    /**
+     * Check if two SpecifiedRecord objects are equal
+     *
+     * @param o Another SpecifiedRecord object
+     * @return true if two SpecifiedRecord objects are equal, false otherwise
+     * */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
