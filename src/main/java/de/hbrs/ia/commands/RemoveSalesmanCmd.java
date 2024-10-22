@@ -15,7 +15,7 @@ public class RemoveSalesmanCmd implements CLIParser.Cmd {
     public boolean execute(String[] args) {
         // check if input is correct
         if (args.length != 1) {
-            System.out.println("Usage: remove_salesman <sid>");
+            System.out.println("> Usage: remove_salesman <sid>");
             return false;
         }
 
@@ -23,7 +23,7 @@ public class RemoveSalesmanCmd implements CLIParser.Cmd {
         try {
             sid = Integer.parseInt(args[0]);
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input: sid must be an integer");
+            System.out.println("> Invalid input: sid must be an integer");
             return false;
         }
 
@@ -31,7 +31,7 @@ public class RemoveSalesmanCmd implements CLIParser.Cmd {
         SalesMan salesman = impl.readSalesMan(sid);
 
         if (salesman == null) {
-            System.out.println("Salesman not found");
+            System.out.println("> Salesman not found");
             return false;
         }
 

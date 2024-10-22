@@ -14,7 +14,7 @@ public class RemoveSocialPerformanceRecordCmd implements CLIParser.Cmd {
     public boolean execute(String[] args) {
         // check if input is correct
         if (args.length != 1) {
-            System.out.println("Usage: remove_spr <sid>");
+            System.out.println("> Usage: remove_spr <sid>");
             return false;
         }
 
@@ -23,7 +23,7 @@ public class RemoveSocialPerformanceRecordCmd implements CLIParser.Cmd {
         try {
             sid = Integer.parseInt(args[0]);
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input: sid must be an integer");
+            System.out.println("> Invalid input: sid must be an integer");
             return false;
         }
 
@@ -32,7 +32,7 @@ public class RemoveSocialPerformanceRecordCmd implements CLIParser.Cmd {
         SalesMan salesman = impl.readSalesMan(sid);
 
         if (salesman == null) {
-            System.out.println("Salesman not found");
+            System.out.println("> Salesman not found");
             return false;
         }
 
@@ -41,7 +41,7 @@ public class RemoveSocialPerformanceRecordCmd implements CLIParser.Cmd {
         );
 
         if (records.isEmpty()) {
-            System.out.println("No social performance records found for salesman with sid: " + sid);
+            System.out.println("> No social performance records found for salesman with sid: " + sid);
             return false;
         }
 
@@ -56,12 +56,12 @@ public class RemoveSocialPerformanceRecordCmd implements CLIParser.Cmd {
 
         // assign them an identifier
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the identifier of the record to delete: ");
+        System.out.print("> Enter the identifier of the record to delete: ");
 
         int identifier = scanner.nextInt();
 
         if (identifier < 1 || identifier > records.size()) {
-            System.out.println("Invalid identifier");
+            System.out.println("> Invalid identifier");
             return false;
         }
 
@@ -73,7 +73,7 @@ public class RemoveSocialPerformanceRecordCmd implements CLIParser.Cmd {
         String confirmation = scanner.next();
 
         if (!confirmation.equalsIgnoreCase("y")) {
-            System.out.println("Deletion cancelled");
+            System.out.println("> Deletion cancelled");
             return false;
         }
 
@@ -81,7 +81,7 @@ public class RemoveSocialPerformanceRecordCmd implements CLIParser.Cmd {
         impl.removeSocialPerformanceRecord(selectedRecord, salesman);
 
         // print a success message
-        System.out.println("Record deleted successfully");
+        System.out.println("> Record deleted successfully");
 
         return true;
     }

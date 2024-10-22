@@ -16,7 +16,7 @@ public class ReadSalesmanCmd implements CLIParser.Cmd {
     public boolean execute(String[] args) {
         // check if input is correct
         if (args.length != 1) {
-            System.out.println("Usage: read_salesman <sid>");
+            System.out.println("> Usage: read_salesman <sid>");
             return false;
         }
 
@@ -25,14 +25,14 @@ public class ReadSalesmanCmd implements CLIParser.Cmd {
         try {
             sid = Integer.parseInt(args[0]);
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input: sid must be an integer");
+            System.out.println("> Invalid input: sid must be an integer");
             return false;
         }
 
         SalesMan salesman = new SalesmanMongoImpl().readSalesMan(sid);
 
         if (salesman == null) {
-            System.out.println("Salesman not found");
+            System.out.println("> Salesman not found");
             return false;
         }
 
