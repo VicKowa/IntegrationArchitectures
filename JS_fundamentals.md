@@ -1,5 +1,285 @@
 # JS fundamentals
 
+## Object Creation in JavaScript
+
+JavaScript offers several methods for creating objects.\
+You can use different methods for different use cases.
+
+### 1. Object literal
+
+**Use case**: 
+> You can best use it for small, single-use objects without requiring a blueprint (e.g. [Constructor](#3-using-a-constructor-function), [Class](#5-using-the-class-keyword)).
+
+```javascript
+let salesMan = {
+  firstname: 'firstname',
+  lastname: 'lastname',
+  sid: sid
+};
+```
+
+### 2. Using the `new` keyword
+
+**Use case**: 
+> You can use it when you first want to create an empty object and then later add properties to it.
+
+```javascript
+let salesMan = new Object();
+salesMan.firstname = 'firstname';
+salesMan.lastname = 'lastname';
+salesMan.sid = sid;
+```
+
+### 3. Using a constructor function
+
+**Use case**: 
+> You can use it when you want to create multiple objects with the same blueprint.
+
+```javascript
+function SalesMan(firstname, lastname, sid) {
+  this.firstname = 'firstname';
+  this.lastname = 'lastname';
+  this.sid = sid;
+}
+```
+
+### 4. Using the `Object.create` method
+
+**Use case**: 
+> You can use it when you want to create an object with a specific prototype.\
+> That means you can create a prototype object with required properties and then create an object 
+> having these properties as well as additional properties.
+
+```javascript
+const prototype = {
+  firstname: 'firstname',
+  lastname: 'lastname',
+  sid: -1
+};
+
+let salesMan = Object.create(prototype);
+salesMan.firstname = 'specificFirstName';
+salesMan.lastname = 'specificLastName';
+salesMan.sid = specificSid;
+
+// additional properties
+salesMan.additionalProperty = 'additionalValue';
+```
+
+### 5. Using the `class` keyword
+
+**Use case**:
+> You can use it when you want to create multiple objects with the same blueprint.\
+
+```javascript
+class SalesMan {
+  constructor(firstname, lastname, sid) {
+    this.firstname = firstname;
+    this.lastname = lastname;
+    this.sid = sid;
+  }
+}
+
+let salesMan = new SalesMan('firstname', 'lastname', sid);
+```
+
+### 6. Using the `function` keyword
+
+**Use case**:
+> You can use it when you want to create multiple objects with the same blueprint.
+
+```javascript
+function SalesMan(firstname, lastname, sid) {
+  this.firstname = firstname;
+  this.lastname = lastname;
+  this.sid = sid;
+}
+
+let salesMan = new SalesMan('firstname', 'lastname', sid);
+```
+
+### 7. Using the `Object.assign` method
+
+**Use case**:
+> You can use it when you want to create a new object by copying the properties of an existing object.
+
+```javascript
+let salesMan = {
+  firstname: 'firstname',
+  lastname: 'lastname',
+  sid: sid
+};
+
+let newSalesMan = Object.assign({}, salesMan);
+```
+
+### 8. Using the `spread` operator
+
+**Use case**:
+> You can use it when you want to create a new object by copying the properties of an existing object.
+
+```javascript
+let salesMan = {
+  firstname: 'firstname',
+  lastname: 'lastname',
+  sid: sid
+};
+
+let newSalesMan = { ...salesMan };
+```
+
+### 9. Using the `Object.setPrototypeOf` method
+
+**Use case**:
+> You can use it when you want to set the prototype of an object.
+
+```javascript
+const prototype = {
+  firstname: 'firstname',
+  lastname: 'lastname',
+  sid: -1
+};
+
+let salesMan = {
+  firstname: 'specificFirstName',
+  lastname: 'specificLastName',
+  sid: specificSid
+};
+
+Object.setPrototypeOf(salesMan, prototype);
+```
+
+### 10. Using the `__proto__` property
+
+**Use case**:
+> You can use it when you want to set the prototype of an object.
+
+```javascript
+const prototype = {
+  firstname: 'firstname',
+  lastname: 'lastname',
+  sid: -1
+};
+
+let salesMan = {
+  firstname: 'specificFirstName',
+  lastname: 'specificLastName',
+  sid: specificSid
+};
+
+salesMan.__proto__ = prototype;
+```
+
+## Functions and Callback Handler (including the term “Pyramid of Doom”)
+
+### Functions 
+
+In JavaScript, a function can be defined in multiple ways:
+ - global Function: `function doStuff() {...}`
+ - Anonymous Function: `function() {...}`
+ - arrow Function: `() {...}`
+
+### Callback
+
+A Callback functions are normal functions that are passed as an argument to another function and are called at a later time.
+
+```javascript
+function doStuff(callback){
+    // ... Code ...
+    callback();
+    // ... Code ...
+}
+
+// Call the function with the callback as argument
+doStuff(() => {
+    console.log("Do Stuff");
+});
+```
+
+
+### The Pyramid of Doom
+
+This term refers to the code structure that is created when several 
+callbacks are to be executed in parallel. The result is a pyramid-like structure.
+
+```javascript
+doStuff1((r1) => {
+    doStuff2(r1, (r2) => {
+        doStuff3(r2, (r3) => {
+            doStuff4(r3, (r4) => {
+                console.log("Do Stuff: ", r4);
+            });
+        });
+    });
+});
+```
+
+This structure can quickly become confusing and is therefore considered a code smell. 
+However, there are several alternatives to the Pyramid of Doom: Promises and the async-await keywords
+
+## Promise (including error handling)
+
+Promises represent a value that may not yet be available, but will be in the future. 
+A promise can either be cancelled (operation successful) or rejected (operation failed).
+
+### Creating a Promise
+First, you have to create a new Promise. In the constructor, you define a function that will later be called by the promise.
+This function takes two parameters, resolve and reject, which allow you to determine the success or failure of the operation.
+
+```javascript
+let promise = new Promise((resolve, reject) => {
+    if (false) {
+        resolve("success");
+    } else {
+        reject("failure");
+    }
+});
+```
+
+### Using a Promise
+Now the promise can be called. To do this, simply call `then`, which calls the previously defined function of the promise. 
+To handle the resolved or rejected state of a promise, new functions are passed to the `then` and `catch` methods. The passed function of the `then` method is called when 
+the promise is resolved and the result is passed to the function it contains. If the promise is rejected, the function of the catch method handles the error by passing the rejection reason to the function.
+
+```javascript
+promise.then((result) => { 
+    console.log(result);
+}).catch((result) => {
+    console.log(result);
+});
+```
+
+### Error handling
+If a promise is rejected, the execution will be stopped and the error will be thrown.\
+To handle the error, you can use the `try...catch` statement or the `.catch()` method, like this:
+
+```js
+// using try...catch:
+async function myFunction() {
+  try {
+    let request1 = new Promise((resolve, reject) => {
+      setTimeout(() => reject(new Error("Whoops!")), 3000)
+    });
+    let request2 = new Promise((resolve, reject) => {
+      setTimeout(() => resolve("Whoops again!"), 3000)
+    });
+
+    let result = await request1;
+    let result2 = await request2;
+  } catch (error) {
+    console.log(error); // Error: Whoops!
+  }
+}
+
+// alternative way to handle errors:
+async function myFunction() {
+  let request1 = new Promise((resolve, reject) => {
+    setTimeout(() => reject(new Error("Whoops!")), 3000)
+  });  
+  let result = await request1.catch(error => console.log(error));
+}
+```
+
 ## The await/async statement
 
 In JS it is possible to declare a function as asynchronous by using the `async` keyword. 
@@ -57,410 +337,16 @@ async function myFunction() {
 ```
 The result will be `Promise { <pending> }` because the promise is not resolved yet when the console.log is executed.
 
-### Error handling
-If a promise is rejected, the execution will be stopped and the error will be thrown.\
-To handle the error, you can use the `try...catch` statement or the `.catch()` method, like this:
+## REST API in Express.js
 
-```js
-// using try...catch:
-async function myFunction() {
-  try {
-    let request1 = new Promise((resolve, reject) => {
-      setTimeout(() => reject(new Error("Whoops!")), 3000)
-    });
-    let request2 = new Promise((resolve, reject) => {
-      setTimeout(() => resolve("Whoops again!"), 3000)
-    });
-
-    let result = await request1;
-    let result2 = await request2;
-  } catch (error) {
-    console.log(error); // Error: Whoops!
-  }
-}
-
-// alternative way to handle errors:
-async function myFunction() {
-  let request1 = new Promise((resolve, reject) => {
-    setTimeout(() => reject(new Error("Whoops!")), 3000)
-  });  
-  let result = await request1.catch(error => console.log(error));
-}
-```
-
-## Axios JS
-Axios is a JavaScript library (or package) that can be used to make HTTP requests from node.js and the browser.\
-It is an isomorphic HTTP client, meaning that it can be used in both the browser and node.js with the exact codebase.\
-Axios is promise-based, which means you can take advantage of JavaScript's async and await for more readable asynchronous code.
-
-### Installation                                                                                                                   
-To install Axios, you can use npm or yarn.\
-
-### Why don't use fetch?
-Axios has the possibility to automatically transform JSON data, perform request timeouts and set default headers.\
-Another advantage is that Axios has a better error handling than fetch.\
-
-### Example of a GET request with Axios
-```js
-const axios = require('axios'); // this allows autocomplete when using axios.<method>
-
-axios.get('https://placeholder/data')
-  .then(function (response) {
-    // this will be executed if the request is successful
-    console.log(response.data);
-  })
-  .catch(error => {
-    console.log(error);
-  });
-```
-In this example, we are making a GET request to the URL `https://placeholders/data`.\
-If the request is successful, the data will be printed out.\
-Otherwise, the error will be printed out.
-
-There is also the possibility to use async/await to make the code more readable:
-```js
-const axios = require('axios');
-
-async function fetchData() {
-  try {
-    const response = await axios.get('https://placeholder/data');
-    console.log(response.data);
-  } catch (error) {
-    console.log(error);
-  }
-}
-```
-
-### How to make a Request with Parameters
-```js
-axios.get('https://placeholder/data', {
-  params: {
-    UserID: 12345,
-    Name: 'John Smith' 
-  }
-}).then(response => {
-  console.log(response.data);
-}).catch(error => {
-  console.log(error);
-});
-```
-This example displays how to make a GET request with two parameters.\
-
-### How to make a POST request
-```js
-axios.post('https://placeholder/animals', {
-  AnimalID: 5678,
-  Name: 'Josy',
-  Type: 'Tutle'
-}).then(response => {
-  console.log(response.data);
-}).catch(error => {
-  console.log(error);
-});
-```
-Above you can see an example of how to make a POST request with some Parameters.\
-The parameters are passed as an object in the second argument of the post method.
-
-## Promise (including error handling)
-
-Promises represent a value that may not yet be available, but will be in the future. 
-A promise can either be cancelled (operation successful) or rejected (operation failed).
-
-### Creating a Promise
-First, you have to create a new Promise. In the constructor, you define a function that will later be called by the promise.
-This function takes two parameters, resolve and reject, which allow you to determine the success or failure of the operation.
-
-```javascript
-let promise = new Promise((resolve, reject) => {
-    if (false) {
-        resolve("success");
-    } else {
-        reject("failure");
-    }
-});
-```
-
-### Using a Promise
-Now the promise can be called. To do this, simply call `then`, which calls the previously defined function of the promise. 
-To handle the resolved or rejected state of a promise, new functions are passed to the `then` and `catch` methods. The passed function of the `then` method is called when 
-the promise is resolved and the result is passed to the function it contains. If the promise is rejected, the function of the catch method handles the error by passing the rejection reason to the function.
-
-```javascript
-promise.then((result) => { 
-    console.log(result);
-}).catch((result) => {
-    console.log(result);
-});
-```
-
-## Functions and Callback Handler (including the term “Pyramid of Doom”)
-
-### Functions 
-
-In JavaScript, a function can be defined in multiple ways:
- - global Function: `function doStuff() {...}`
- - Anonymous Function: `function() {...}`
- - arrow Function: `() {...}`
-
-### Callback
-
-A Callback functions are normal functions that are passed as an argument to another function and are called at a later time.
-
-```javascript
-function doStuff(callback){
-    // ... Code ...
-    callback();
-    // ... Code ...
-}
-
-// Call the function with the callback as argument
-doStuff(() => {
-    console.log("Do Stuff");
-});
-```
-
-
-### The Pyramid of Doom
-
-This term refers to the code structure that is created when several 
-callbacks are to be executed in parallel. The result is a pyramid-like structure.
-
-```javascript
-doStuff1((r1) => {
-    doStuff2(r1, (r2) => {
-        doStuff3(r2, (r3) => {
-            doStuff4(r3, (r4) => {
-                console.log("Do Stuff: ", r4);
-            });
-        });
-    });
-});
-```
-
-This structure can quickly become confusing and is therefore considered a code smell. 
-However, there are several alternatives to the Pyramid of Doom: Promises and the async-await keywords
-
-## Cookie-Handler Express.js
-
-In Express.js, it is possible to create, read, change and delete cookies using the cookie parser 
-module. These cookies can store various information across sessions in the user's browser.
-
-First, the module must be loaded with express:
-```javaScript
-const express = require("express");
-const app = express();
-const cookieParser = require("cookie-parser");
-app.use(cookieParser());
-```
-
-# Create Cookie
-This is possible by using the “res.cookie(...)” method. This allows you 
-to define new cookies that are sent to the client with the response.
-
-
-```javaScript
-app.get('/set-cookie', (req, res) => {
-    // ... Code ...
-    res.cookie('key1', "My cookie")
-
-    // ... Code ...
-    res.send('Send cookie');
-});
-```
-
-## Read Cookie
-It is also possible to read a cookie. For this purpose, `req.cookies` is used to access all cookies created by the Express Server.
-
-```javaScript
-app.get('/get-cookie', (req, res) => {
-    // ... Code ...
-
-    const key1 = req.cookies.key1;
-
-    // ... Code ...
-});
-```
-
-### Object Creation in JavaScript
-
-JavaScript offers several methods for creating objects.\
-You can use different methods for different use cases.
-
-#### 1. Object literal
-
-**Use case**: 
-> You can best use it for small, single-use objects without requiring a blueprint (e.g. [Constructor](#3-using-a-constructor-function), [Class](#5-using-the-class-keyword)).
-
-```javascript
-let salesMan = {
-  firstname: 'firstname',
-  lastname: 'lastname',
-  sid: sid
-};
-```
-
-#### 2. Using the `new` keyword
-
-**Use case**: 
-> You can use it when you first want to create an empty object and then later add properties to it.
-
-```javascript
-let salesMan = new Object();
-salesMan.firstname = 'firstname';
-salesMan.lastname = 'lastname';
-salesMan.sid = sid;
-```
-
-#### 3. Using a constructor function
-
-**Use case**: 
-> You can use it when you want to create multiple objects with the same blueprint.
-
-```javascript
-function SalesMan(firstname, lastname, sid) {
-  this.firstname = 'firstname';
-  this.lastname = 'lastname';
-  this.sid = sid;
-}
-```
-
-#### 4. Using the `Object.create` method
-
-**Use case**: 
-> You can use it when you want to create an object with a specific prototype.\
-> That means you can create a prototype object with required properties and then create an object 
-> having these properties as well as additional properties.
-
-```javascript
-const prototype = {
-  firstname: 'firstname',
-  lastname: 'lastname',
-  sid: -1
-};
-
-let salesMan = Object.create(prototype);
-salesMan.firstname = 'specificFirstName';
-salesMan.lastname = 'specificLastName';
-salesMan.sid = specificSid;
-
-// additional properties
-salesMan.additionalProperty = 'additionalValue';
-```
-
-#### 5. Using the `class` keyword
-
-**Use case**:
-> You can use it when you want to create multiple objects with the same blueprint.\
-
-```javascript
-class SalesMan {
-  constructor(firstname, lastname, sid) {
-    this.firstname = firstname;
-    this.lastname = lastname;
-    this.sid = sid;
-  }
-}
-
-let salesMan = new SalesMan('firstname', 'lastname', sid);
-```
-
-#### 6. Using the `function` keyword
-
-**Use case**:
-> You can use it when you want to create multiple objects with the same blueprint.
-
-```javascript
-function SalesMan(firstname, lastname, sid) {
-  this.firstname = firstname;
-  this.lastname = lastname;
-  this.sid = sid;
-}
-
-let salesMan = new SalesMan('firstname', 'lastname', sid);
-```
-
-#### 7. Using the `Object.assign` method
-
-**Use case**:
-> You can use it when you want to create a new object by copying the properties of an existing object.
-
-```javascript
-let salesMan = {
-  firstname: 'firstname',
-  lastname: 'lastname',
-  sid: sid
-};
-
-let newSalesMan = Object.assign({}, salesMan);
-```
-
-#### 8. Using the `spread` operator
-
-**Use case**:
-> You can use it when you want to create a new object by copying the properties of an existing object.
-
-```javascript
-let salesMan = {
-  firstname: 'firstname',
-  lastname: 'lastname',
-  sid: sid
-};
-
-let newSalesMan = { ...salesMan };
-```
-
-#### 9. Using the `Object.setPrototypeOf` method
-
-**Use case**:
-> You can use it when you want to set the prototype of an object.
-
-```javascript
-const prototype = {
-  firstname: 'firstname',
-  lastname: 'lastname',
-  sid: -1
-};
-
-let salesMan = {
-  firstname: 'specificFirstName',
-  lastname: 'specificLastName',
-  sid: specificSid
-};
-
-Object.setPrototypeOf(salesMan, prototype);
-```
-
-#### 10. Using the `__proto__` property
-
-**Use case**:
-> You can use it when you want to set the prototype of an object.
-
-```javascript
-const prototype = {
-  firstname: 'firstname',
-  lastname: 'lastname',
-  sid: -1
-};
-
-let salesMan = {
-  firstname: 'specificFirstName',
-  lastname: 'specificLastName',
-  sid: specificSid
-};
-
-salesMan.__proto__ = prototype;
-```
-
-### REST API in Express.js
-
-#### 1. What is REST API?
+### 1. What is REST API?
 
 **REST** stands for **RE**presentational **S**tate **T**ransfer.\
 It is an architectural style that defines a set of constraints to be used for creating a RESTful web service.
 
 > **RESTful web service** is a web service that follows the REST architecture.
 
-##### Constraints of REST architecture
+#### Constraints of REST architecture
 
 1. **Uniform Interface**:\
    The interface between clients and servers should be the same for all RESTful web services.
@@ -475,7 +361,7 @@ It is an architectural style that defines a set of constraints to be used for cr
 6. **Code on Demand (optional)**:\
    Servers can provide executable code to the client.
 
-#### 2. What is a Resource?
+### 2. What is a Resource?
 
 A **resource** is an object or representation of something that can be identified.\
 A resource can be a physical object, a service, or a collection of other resources.
@@ -492,7 +378,7 @@ Therefore, we can define the following routes:
 - `PUT /salesman/:id`: Update a specific salesman
 - `DELETE /salesman/:id`: Delete a specific salesman
 
-#### 3. How to create a REST API in Express.js?
+### 3. How to create a REST API in Express.js?
 
 **Important**: If not already done, install Express.js by running `npm install express`.
 
@@ -647,19 +533,135 @@ app.delete('/salesman/:id', (req, res) => {
 - To test the REST API:\
   Use a tool like [Postman](https://www.postman.com/) to send GET, POST, PUT, and DELETE requests to the defined routes.
 
-### Observer-Pattern with RxJS
+## Axios JS
+Axios is a JavaScript library (or package) that can be used to make HTTP requests from node.js and the browser.\
+It is an isomorphic HTTP client, meaning that it can be used in both the browser and node.js with the exact codebase.\
+Axios is promise-based, which means you can take advantage of JavaScript's async and await for more readable asynchronous code.
 
-#### 1. What is the Observer Pattern?
+### Installation                                                                                                                   
+To install Axios, you can use npm or yarn.\
+
+### Why don't use fetch?
+Axios has the possibility to automatically transform JSON data, perform request timeouts and set default headers.\
+Another advantage is that Axios has a better error handling than fetch.\
+
+### Example of a GET request with Axios
+```js
+const axios = require('axios'); // this allows autocomplete when using axios.<method>
+
+axios.get('https://placeholder/data')
+  .then(function (response) {
+    // this will be executed if the request is successful
+    console.log(response.data);
+  })
+  .catch(error => {
+    console.log(error);
+  });
+```
+In this example, we are making a GET request to the URL `https://placeholders/data`.\
+If the request is successful, the data will be printed out.\
+Otherwise, the error will be printed out.
+
+There is also the possibility to use async/await to make the code more readable:
+```js
+const axios = require('axios');
+
+async function fetchData() {
+  try {
+    const response = await axios.get('https://placeholder/data');
+    console.log(response.data);
+  } catch (error) {
+    console.log(error);
+  }
+}
+```
+
+### How to make a Request with Parameters
+```js
+axios.get('https://placeholder/data', {
+  params: {
+    UserID: 12345,
+    Name: 'John Smith' 
+  }
+}).then(response => {
+  console.log(response.data);
+}).catch(error => {
+  console.log(error);
+});
+```
+This example displays how to make a GET request with two parameters.\
+
+### How to make a POST request
+```js
+axios.post('https://placeholder/animals', {
+  AnimalID: 5678,
+  Name: 'Josy',
+  Type: 'Tutle'
+}).then(response => {
+  console.log(response.data);
+}).catch(error => {
+  console.log(error);
+});
+```
+Above you can see an example of how to make a POST request with some Parameters.\
+The parameters are passed as an object in the second argument of the post method.
+
+## Cookie-Handler Express.js
+
+In Express.js, it is possible to create, read, change and delete cookies using the cookie parser 
+module. These cookies can store various information across sessions in the user's browser.
+
+First, the module must be loaded with express:
+```javaScript
+const express = require("express");
+const app = express();
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
+```
+
+### Create Cookie
+This is possible by using the “res.cookie(...)” method. This allows you 
+to define new cookies that are sent to the client with the response.
+
+
+```javaScript
+app.get('/set-cookie', (req, res) => {
+    // ... Code ...
+    res.cookie('key1', "My cookie")
+
+    // ... Code ...
+    res.send('Send cookie');
+});
+```
+
+### Read Cookie
+It is also possible to read a cookie. For this purpose, `req.cookies` is used to access all cookies created by the Express Server.
+
+```javaScript
+app.get('/get-cookie', (req, res) => {
+    // ... Code ...
+
+    const key1 = req.cookies.key1;
+
+    // ... Code ...
+});
+```
+
+## A module for implementing the calculation of the bonus salary of a salesman.
+
+## Observer-Pattern with RxJS
+
+### 1. What is the Observer Pattern?
 
 The **Observer Pattern** is a behavioral design pattern that defines a one-to-many dependency between objects so that when one object changes state, all its dependents are notified and updated automatically.
 
-#### General Structure of the Observer Pattern
+### General Structure of the Observer Pattern
 
-##### What is RxJS?
+#### What is RxJS?
 
 **RxJS** is a library for reactive programming using Observables, to make it easier to compose asynchronous or callback-based code. The idea is to treat events as streams of data that can be manipulated.
 
-##### Key Concepts of RxJS
+#### Key Concepts of RxJS
 
 1. **Observable**:\
    Represents a collection of future values or events. You can subscribe to them to receive these values or events.
@@ -673,14 +675,14 @@ The **Observer Pattern** is a behavioral design pattern that defines a one-to-ma
 4. **Operators**:\
    Functions that allow you to manipulate the data emitted by Observables. The manipulation can include filtering, transforming, combining, etc.
 
-##### Comparison with Observer Pattern
+#### Comparison with Observer Pattern
 
 - **Observable** is equivalent to the **Subject** in the Observer Pattern.
 - **Observer** is equivalent to the **Observer** in the Observer Pattern.
 - **Subscription** is equivalent to the **ConcreteObserver** in the Observer Pattern.
 - **Operators** are additional features provided by RxJS.
 
-#### 2. How to implement the Observer Pattern with RxJS?
+### 2. How to implement the Observer Pattern with RxJS?
 
 **Important**: If not already done, install RxJS by running `npm install rxjs`.
 
@@ -729,6 +731,9 @@ Done
 
 Because we defined the Observable to emit two values ('Hello' and 'World') and then complete if subscribed to.
 The `Done` is logged because we defined the observer to handle the completion with `console.log('Done')`. 
+
+## Please provide solid definitions (including references!) to the following terms:
+Asynchrony, Parallelism, and Concurrency (or: Multithreading)
 
 ## Source
 
