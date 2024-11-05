@@ -649,6 +649,101 @@ app.get('/get-cookie', (req, res) => {
 
 ## A module for implementing the calculation of the bonus salary of a salesman.
 
+Note: the following code snippets include sudo code
+
+### 1. How does the bonus calculation work?
+Each salesman receives a bonus based on their orders and social performance evaluation. \
+The bonus is calculated as follows: \
+    Order evaluation bonus: \
+        - for each amount of sold products to a costumer, the salesman receives a bonus value determined by the ceo currently \
+            - the bonus value depends on what the reputation of the costumer is \
+        - the total <i>order evalution bonus</i> is the sum of the bonus values \
+    Social performance evaluation bonus: \
+        - Each salesman has a social performance record \
+        - It consists of 6 specified records \
+            - each specified record has a target value, actual value and a bonus value \
+        - The bonus value is currently determined by the ceo \
+        - The total <i>social performance evaluation bonus</i> is the sum of the bonus values of the 6 specified records \
+The total bonus is the sum of the <i>order evaluation bonus</i> and the <i>social performance evaluation bonus</i>.\
+
+### 2. Where do the data come from? 
+- The basic data for a salesman (e.g. firstname, lastname, sid) is stored in the SalesmanCollection of a MongoDB.
+- The sold products and the reputation of the costumers are stored in an OpenCRX application.
+- The social performance records and specified records are also stored in an internal MongoDB database <i>(with bonus values)</i>.
+- The bonus values for the orders are currently determined by the CEO and are stored in a dto.
+
+### 3. How to implement the bonus calculation module?
+#### 3.1. Fetch the required data
+We define functions to fetch data from OpenCRX:
+```javascript
+function fetchOrdersOfSalesman(sid) {
+  // Fetch orders of the salesman from OpenCRX
+    //...
+    //this function returns an array of Order objects
+}
+
+function fetchCostumerReputation(costumerId) {
+  // Fetch costumer reputation from OpenCRX
+}
+```
+To fetch the data of the local MongoDB, we define a SalesmanAPI with CRUD operations for the SalesmanCollection. \
+The SalesmanAPI has endpoints to fetch the social performance records and specified records. \
+The <b>bonus values</b> are stored for each specified record. \
+These endpoints can be called via axios. \
+
+#### 3.2 DTO for orders
+Let's assume that we have an Order class in the model which should look like this:
+```javascript
+class Order {
+  constructor(productId, costumerId, amount) {
+    this.productId = productId;
+    this.costumerId = costumerId;
+    this.amount = amount;
+  }
+}
+```
+There also should be a OrderBonusDTO to store the bonus values for the orders:
+```javascript
+class OrderBonusDTO {
+  constructor(order, bonusValue) {
+    this.reputation = reputation;
+    this.bonusValue = bonusValue;
+  }
+}
+```
+#### 3.3 Map the orders to OrderBonusDTOs
+We define a function to map the orders to OrderBonusDTOs:
+```javascript
+function mapOrdersToOrderBonusDTOs(orders, bonusValues) {
+  // Map the orders to OrderBonusDTOs
+    //...
+}
+```
+
+#### 3.4. Calculate the bonus
+We define functions to calculate the bonus:
+```javascript
+function calculateOrderEvaluationBonus(orderBonusDTOs) {
+  // Calculates and returns the order evaluation bonus
+    //..
+}
+function calculateSocialPerformanceEvaluationBonus(socialPerformanceRecords) {
+  // Calculates and returns the social performance evaluation bonus
+    //..
+}
+
+function calculateTotalBonus(sid) {
+  // Fetch orders of the salesman
+    // get bonus values for the orders
+    // map the orders to OrderBonusDTOs
+  // fetch Salesman with Social Performance Records
+    // Calculate the order evaluation bonus
+    // Calculate the social performance evaluation bonus
+    // Calculate the total bonus
+    // Return the total bonus
+}
+```
+
 ## Observer-Pattern with RxJS
 
 ### 1. What is the Observer Pattern?
@@ -749,3 +844,6 @@ Asynchrony, Parallelism, and Concurrency (or: Multithreading)
 10. [Promises](https://www.w3schools.com/Js/js_promise.asp)
 11. [Functions](https://www.w3schools.com/js/js_function_definition.asp)
 12. [Pyramid of Doom](https://dev.to/junihoj/the-perils-of-callback-hell-navigating-the-pyramid-of-doom-in-javascript-alj)
+13. [Async/Await](https://javascript.info/async-await)
+14. [Async/Await](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function) 
+15. [Axios](https://axios-http.com/docs/intro)
