@@ -827,8 +827,31 @@ Done
 Because we defined the Observable to emit two values ('Hello' and 'World') and then complete if subscribed to.
 The `Done` is logged because we defined the observer to handle the completion with `console.log('Done')`. 
 
-## Please provide solid definitions (including references!) to the following terms:
-Asynchrony, Parallelism, and Concurrency (or: Multithreading)
+## Definition Asynchronous Programming
+
+Asynchronous programming is a programming paradigm that allows the program to execute tasks concurrently.\
+This means that the program can perform multiple tasks at the same time, without waiting for one task to finish before starting another.\
+Examples for non-asynchronous programming languages are C, C++, Java, etc.\
+Examples for asynchronous programming languages are JavaScript, Python, etc.
+
+### Where is Asynchronous Programming used?
+
+1. **Web Development**:\
+   In web development, asynchronous programming is used to handle tasks like fetching data from a server, handling user input, etc.
+2. **File I/O**:\
+   When reading or writing files, asynchronous programming can be used to prevent the program from blocking while waiting for the I/O operation to complete.
+
+## Definition Parallelism
+
+Parallelism is a programming paradigm that allows the program to execute multiple tasks simultaneously.\
+To achieve this parallel execution, the program can use multiple processors or cores.\
+Examples for parallel programming languages are C, C++, Java, etc.
+
+## Definition Concurrency
+
+Concurrency is a programming paradigm that allows the program to execute multiple tasks at the same time.\
+It is not the same as parallel programming, as concurrency can be achieved on a single processor or core.\
+It works by interleaving the execution of tasks (i.e. context switching, time-sharing), so that it appears as if they are running simultaneously.\
 
 ## Source
 
@@ -847,3 +870,6 @@ Asynchrony, Parallelism, and Concurrency (or: Multithreading)
 13. [Async/Await](https://javascript.info/async-await)
 14. [Async/Await](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function) 
 15. [Axios](https://axios-http.com/docs/intro)
+16. [Asynchronous Programming](https://medium.com/@it.illuminated/exploring-concurrency-parallelism-and-asynchronous-programming-in-ne-29e0fce8cf20)
+17. [Parallelism](https://medium.com/@it.illuminated/exploring-concurrency-parallelism-and-asynchronous-programming-in-ne-29e0fce8cf20)
+18. [Concurrency](https://medium.com/@it.illuminated/exploring-concurrency-parallelism-and-asynchronous-programming-in-ne-29e0fce8cf20)
